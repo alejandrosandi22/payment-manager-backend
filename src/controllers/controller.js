@@ -14,7 +14,6 @@ const getClient = async (req, res, next) => {
 
   try {
     const result = await pool.query('SELECT * FROM clients WHERE id = $1', [id]);
-    console.log(result);
 
     if (result.rows.length === 0) 
       return res.status(404).json({
@@ -28,16 +27,20 @@ const getClient = async (req, res, next) => {
 };
 
 const createClient = async (req, res, next) => {
-  const { id, name, payment } = req.body;
+  const { id, name, payment, date } = req.body;
 
   try {
-    const result = await pool.query("INSERT INTO clients (id, name, payment) VALUES ($1, $2, $3) RETURNING *", [
+    const result = await pool.query("INSERT INTO clients (id, name, payment, date) VALUES ($1, $2, $3, $4) RETURNING *", [
       id,
       name,
-      payment
+      payment,
+      date,
     ]);
 
+
     res.json(result.rows[0]);
+
+    return 'success';
   } catch (error) {
     next(error);
   }
