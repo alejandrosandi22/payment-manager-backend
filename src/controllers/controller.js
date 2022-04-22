@@ -50,12 +50,12 @@ const createClient = async (req, res, next) => {
 
 const updateClient = async (req, res, next) => {
   const { id } = req.params;
-  const { name, payment } = req.body;
+  const { name, payment, date } = req.body;
 
   try {
     
-    const result = await pool.query('UPDATE clients SET name = $1, payment = $2 WHERE id = $3 RETURNING *', [
-      name, payment, id
+    const result = await pool.query('UPDATE clients SET name = $1, payment = $2, date = $3 WHERE id = $4 RETURNING *', [
+      name, payment, date, id
     ]);
   
     if (result.rows.length === 0)
