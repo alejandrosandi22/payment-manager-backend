@@ -18,7 +18,8 @@ app.use((err, req, res, next) => {
   })
 })
 
-app.set('port', process.env.PORT || 4000)
+//app.set('port', process.env.PORT || 4000)
+app.set('port', 4000)
 
 
 app.listen(app.get('port'), () => {
