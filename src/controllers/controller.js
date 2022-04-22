@@ -2,7 +2,7 @@ const pool = require('../database');
 
 const getAllClients = async (req, res, next) => {
   try {
-    const allClients = await pool.query('SELECT * FROM clients ORDER BY name ASC');
+    const allClients = await pool.query('SELECT * FROM clients');
     res.json(allClients.rows);
   } catch (error){
     next(error); 
@@ -50,14 +50,12 @@ const createClient = async (req, res, next) => {
 
 const updateClient = async (req, res, next) => {
   const { id } = req.params;
-  const { name, payment, date } = req.body;
-
-  console.log(req.body)
+  const { name, payment } = req.body;
 
   try {
     
-    const result = await pool.query('UPDATE clients SET name = $1, payment = $2, date = $3 WHERE id = $4 RETURNING *', [
-      name, payment, date, id
+    const result = await pool.query('UPDATE clients SET name = $1, payment = $2 WHERE id = $3 RETURNING *', [
+      name, payment, id
     ]);
   
     if (result.rows.length === 0)
