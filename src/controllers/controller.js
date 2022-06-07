@@ -1,11 +1,13 @@
-const pool = require('../database');
+const pool = require("../database");
 
 const getAllClients = async (_req, res, next) => {
   try {
-    const allClients = await pool.query('SELECT * FROM clients ORDER BY name ASC');
+    const allClients = await pool.query(
+      "SELECT * FROM clients ORDER BY name ASC"
+    );
     res.json(allClients.rows);
-  } catch (error){
-    next(error); 
+  } catch (error) {
+    next(error);
   }
 };
 
@@ -13,11 +15,13 @@ const getClient = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query('SELECT * FROM clients WHERE id = $1', [id]);
+    const result = await pool.query("SELECT * FROM clients WHERE id = $1", [
+      id,
+    ]);
 
-    if (result.rows.length === 0) 
+    if (result.rows.length === 0)
       return res.status(404).json({
-        message: 'Client not found'
+        message: "Client not found",
       });
 
     res.json(result.rows[0]);
@@ -27,66 +31,58 @@ const getClient = async (req, res, next) => {
 };
 
 const createClient = async (req, res, next) => {
-  const { id, name, payment, date } = req.body;
+  const { id, name, payment } = req.body;
 
   try {
-    const result = await pool.query("INSERT INTO clients (id, name, payment, date) VALUES ($1, $2, $3, $4) RETURNING *", [
-      id,
-      name,
-      payment,
-      date,
-    ]);
-
+    const result = await pool.query(
+      "INSERT INTO clients (id, name, payment, date) VALUES ($1, $2, $3, current_timestamp) RETURNING *",
+      [id, name, payment]
+    );
 
     res.json(result.rows[0]);
 
-    return 'success';
+    return "success";
   } catch (error) {
     next(error);
   }
-
-
 };
 
 const updateClient = async (req, res, next) => {
   const { id } = req.params;
-  const { name, payment, date } = req.body;
+  const { name, payment } = req.body;
 
   try {
-    
-    const result = await pool.query('UPDATE clients SET name = $1, payment = $2, date = $4 WHERE id = $3 RETURNING *', [
-      name, payment, id, date
-    ]);
-  
+    const result = await pool.query(
+      "UPDATE clients SET name = $1, payment = $2, date = current_timestamp WHERE id = $3 RETURNING *",
+      [name, payment, id]
+    );
+
     if (result.rows.length === 0)
       return res.status(404).json({
-        message: "Client not found"
-      })
-  
-    res.json(result.rows[0])
+        message: "Client not found",
+      });
+
+    res.json(result.rows[0]);
   } catch (error) {
     next(error);
   }
-
 };
 
 const deleteClient = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const result = await pool.query('DELETE FROM clients WHERE id = $1', [id]);
-    
-  if (result.rowCount === 0)
-    return res.status(404).json({
-      message: "Client not found"
-    });
-  
+    const result = await pool.query("DELETE FROM clients WHERE id = $1", [id]);
+
+    if (result.rowCount === 0)
+      return res.status(404).json({
+        message: "Client not found",
+      });
+
     return res.sendStatus(204);
-    
   } catch (error) {
     next(error);
   }
-  
 };
 
 module.exports = {
@@ -94,5 +90,5 @@ module.exports = {
   getClient,
   createClient,
   updateClient,
-  deleteClient
+  deleteClient,
 };
