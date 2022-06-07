@@ -1,26 +1,25 @@
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
 
-const routes = require('./routes/routes');
+const routes = require("./routes/routes");
 
 const app = express();
 
 app.use(cors());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 app.use(express.json());
 
-app.use(routes)
+app.use(routes);
 
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   return res.json({
-    message: err.message
-  })
-})
+    message: err.message,
+  });
+});
 
-app.set('port', process.env.PORT || 4000)
+app.set("port", process.env.PORT || 4000);
 
-
-app.listen(app.get('port'), () => {
-  console.log(`Server on port ${app.get('port')} ...`)
+app.listen(app.get("port"), () => {
+  console.log(`Server on port ${app.get("port")} ...`);
 });
