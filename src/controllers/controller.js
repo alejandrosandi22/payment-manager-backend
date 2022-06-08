@@ -3,7 +3,7 @@ const pool = require("../database");
 const getAllClients = async (_req, res, next) => {
   try {
     const allClients = await pool.query(
-      "SELECT * FROM clients ORDER BY name ASC"
+      "SELECT * FROM clients ORDER BY date ASC"
     );
     res.json(allClients.rows);
   } catch (error) {
